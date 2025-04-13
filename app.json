@@ -36,6 +36,9 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "API_KEY_HUGGING_FACE": "enter yourself"
     }
   }
 }

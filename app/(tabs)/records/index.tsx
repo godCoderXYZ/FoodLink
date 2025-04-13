@@ -11,8 +11,12 @@ import { ThemedView } from '@/components/ThemedView';
 
 import * as FileSystem from 'expo-file-system';
 
-require('dotenv').config();
-const apiKeyHuggingFace = process.env.API_KEY_HUGGING_FACE;
+import Constants from 'expo-constants';
+
+const apiKeyHuggingFace = Constants.expoConfig?.extra?.API_KEY_HUGGING_FACE;
+
+// require('dotenv').config();
+// const apiKeyHuggingFace = process.env.API_KEY_HUGGING_FACE;
 
 // Hugging Face API
 import { InferenceClient } from '@huggingface/inference';
