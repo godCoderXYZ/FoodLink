@@ -28,7 +28,17 @@ type VQAResponse = {
   confidence: number;
 };
 
-async function getVisualAnswer(downloadResultUri:any = undefined, imageUri:string = "") {
+type FoodItem = {
+  foodType: string | undefined;
+  foodTypeWeight: string | undefined;
+};
+
+type ResponseDictionary = {
+  [key: string]: (string | boolean | Array<FoodItem> | undefined);
+};
+
+
+async function getVisualAnswer(downloadResultUri:any = undefined, imageUri:string = "", question:string = "What is the photo a photo of?") {
   try {
     if (downloadResultUri == undefined){
       // 1. Download image
@@ -61,7 +71,7 @@ async function getVisualAnswer(downloadResultUri:any = undefined, imageUri:strin
     const {answer, score} = await hf.visualQuestionAnswering({
       model: 'dandelin/vilt-b32-finetuned-vqa',
       inputs: {
-        question: 'What is this?',
+        question: question,
         image: blobLike
       }
     });
@@ -82,7 +92,21 @@ export default function RecordsHomeScreen() {
 
   const firstRunRef = useRef(true);
 
-  const [response, setResponse] = useState<VQAResponse | null>(null);
+  const [response, setResponse] = useState<ResponseDictionary>({
+    "isFood":false,
+    "weight":'0',
+    "foodData": [
+      {
+        foodType: "",
+        foodTypeWeight: "",
+      },
+      {
+        foodType: "",
+        foodTypeWeight: "",
+      },
+    ]
+
+  });
 
   const { photoUri } = useLocalSearchParams() as {photoUri?: string};
 
@@ -90,8 +114,82 @@ export default function RecordsHomeScreen() {
 
   const initialURL = 'https://placecats.com/millie_neo/300/200';
 
-  const fetchAnswer = async (downloadedResult:any, imageUri:string) => {
-    setResponse(await getVisualAnswer(downloadedResult, imageUri));
+  const fetchAnswer = async (downloadedResult:any=undefined, question:string="What is the photo a photo of?", imageUri:string="") => {
+    return (await getVisualAnswer(downloadedResult, imageUri, question));
+  };
+
+  const FoodList = ({ items }: { items: FoodItem[] }) => {
+    return (
+      <ThemedView style={styles.container}>
+        {items.map((item, index) => (
+          <ThemedView key={index} style={styles.item}>
+            <ThemedText>Type: {item.foodType || 'Not specified'}</ThemedText>
+            <ThemedText>Weight: {item.foodTypeWeight || 'Not specified'}</ThemedText>
+          </ThemedView>
+        ))}
+      </ThemedView>
+    );
+  };
+
+  const updateResponse = async(downloadedResult:any=undefined, imageUri:string="") => {
+
+    const responseCopy = {...response};
+
+    const isFoodPhoto = await fetchAnswer(downloadedResult, "Is there food in the photo?", imageUri);
+
+    if (isFoodPhoto.answer === "Yes" || isFoodPhoto.answer === "yes"){
+
+      responseCopy.isFood = true;
+      console.log("is Food set to true");
+
+      const weight = fetchAnswer(downloadedResult, "What is the weight of the food in the photo, in kilograms?", imageUri);
+      
+      const foodType1 = await fetchAnswer(downloadedResult, "What type of food is in the photo?", imageUri);
+
+      const foodTypeWeight1 = fetchAnswer(downloadedResult, "How many kilograms of " + foodType1 + " are in the photo?", imageUri);
+
+      const hasMoreFoodType = await fetchAnswer(downloadedResult, "Are there more food types in the photo, besides " + foodType1, imageUri);
+
+      responseCopy.weight = (await weight).answer + 'kg';
+
+      const foodData:Array<FoodItem> = [];
+
+      const foodItem1: FoodItem = {
+        foodType: (foodType1).answer,
+        foodTypeWeight: (await foodTypeWeight1).answer + 'kg',
+      }
+
+      foodData.push(foodItem1)
+
+      if (hasMoreFoodType.answer === "Yes" || hasMoreFoodType.answer === "yes"){
+
+        const foodType2 = await fetchAnswer(downloadedResult, "What type of food is in the photo, besides " + foodType1 + "?", imageUri);
+
+        const foodTypeWeight2 = fetchAnswer(downloadedResult, "How many kilograms of " + foodType2 + " are in the photo?", imageUri);
+
+        const foodItem2: FoodItem = {
+          foodType: (foodType2).answer,
+          foodTypeWeight: (await foodTypeWeight2).answer + 'kg',
+        }
+        
+        foodData.push(foodItem2)
+
+      }
+
+      responseCopy.foodData = foodData;
+
+
+    } else {
+      responseCopy.isFood = false;
+    }
+
+    setResponse(responseCopy);
+
+    console.log("updated");
+    console.log(response.isFood);
+    console.log(response);
+    
+
   };
   
 
@@ -101,11 +199,14 @@ export default function RecordsHomeScreen() {
     if (photoUri != undefined && typeof photoUri === 'string' && photoUri != 'undefined') {
       console.log("Received photo:", photoUri);
 
-      fetchAnswer(photoUri, "");
+      // fetchAnswer(photoUri, "What is the total weight of all the food, in kilograms?", "");
+
+      updateResponse(photoUri);
+
 
       // router.setParams({ photoUri: undefined });
     } else {
-      fetchAnswer(undefined, initialURL);
+      fetchAnswer(undefined, undefined, initialURL);
     }
   }, [photoUri]);
 
@@ -120,8 +221,12 @@ export default function RecordsHomeScreen() {
 
 
       <ThemedText>
-        {response && ('Answer:' + response.answer + "\n")}
-        {response && ('Score:' + Math.floor(response.confidence * 1000)/10 + "%\n\n")}
+        {response.isFood && (
+          
+          // 'Weight:' + response.weight + "\n\n" + 'Food Data:\n' + <FoodList items={response.foodData as FoodItem[]} />
+          'Weight:' + response.weight + "\n\n" + 'Food Data:\n' + JSON.stringify(response.foodData)
+          
+        )}
       </ThemedText>
 
       {photoUri ? (
@@ -188,6 +293,15 @@ const styles = StyleSheet.create({
     width: 300,
     height: 300,
     borderRadius: 10,
+  },
+  container: {
+    padding: 10,
+  },
+  item: {
+    padding: 10,
+    marginBottom: 10,
+    backgroundColor: '#f5f5f5',
+    borderRadius: 5,
   },
 
 });

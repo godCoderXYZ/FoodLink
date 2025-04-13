@@ -1,4 +1,4 @@
-{
+export default {
   "expo": {
     "name": "FoodLink",
     "slug": "FoodLink",
@@ -35,10 +35,10 @@
       ]
     ],
     "experiments": {
-      "typedRoutes": true
+      "typedRoutes": true,
     },
     "extra": {
-      "API_KEY_HUGGING_FACE": "enter yourself"
+      "API_KEY_HUGGING_FACE": process.env.API_KEY_HUGGING_FACE,
     }
   }
 }
