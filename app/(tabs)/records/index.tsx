@@ -9,11 +9,15 @@ import { TouchableOpacity, Image, StyleSheet, Platform } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 
+import * as FileSystem from 'expo-file-system';
+
+require('dotenv').config();
+const apiKeyHuggingFace = process.env.API_KEY_HUGGING_FACE;
+
 // Hugging Face API
 import { InferenceClient } from '@huggingface/inference';
-const hf = new InferenceClient('INSERT API KEY HERE');
+const hf = new InferenceClient(apiKeyHuggingFace);
 
-import * as FileSystem from 'expo-file-system';
 
 type VQAResponse = {
   answer: string | undefined;
