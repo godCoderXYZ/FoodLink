@@ -12,63 +12,71 @@ export default function HomeScreen() {
   
 
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome to FoodLink!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      
-      <ThemedView style={styles.userContainer}>
-        <ThemedText type="subtitle">Hello, {username || 'User'}!</ThemedText>
-      </ThemedView>
-      
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Response:</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12'
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-      
-      <TouchableOpacity style={styles.logoutButton} onPress={logout}>
-        <ThemedText style={styles.logoutButtonText}>Logout</ThemedText>
-      </TouchableOpacity>
-    </ParallaxScrollView>
+    <ThemedView style={styles.container}>
+      <ParallaxScrollView
+        headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
+        headerImage={
+          <Image
+            source={require('@/assets/images/partial-react-logo.png')}
+            style={styles.reactLogo}
+          />
+        }>
+
+        <ThemedView style={styles.titleContainer}>
+          <ThemedText type="title">Welcome to FoodLink!</ThemedText>
+          <HelloWave />
+        </ThemedView>
+        
+        <ThemedView style={styles.userContainer}>
+          <ThemedText type="subtitle">Hello, {username || 'User'}!</ThemedText>
+        </ThemedView>
+        
+        {/* <ThemedView style={styles.stepContainer}>
+          <ThemedText type="subtitle">Response:</ThemedText>
+          <ThemedText>
+            Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
+            Press{' '}
+            <ThemedText type="defaultSemiBold">
+              {Platform.select({
+                ios: 'cmd + d',
+                android: 'cmd + m',
+                web: 'F12'
+              })}
+            </ThemedText>{' '}
+            to open developer tools.
+          </ThemedText>
+        </ThemedView>
+        <ThemedView style={styles.stepContainer}>
+          <ThemedText type="subtitle">Step 2: Explore</ThemedText>
+          <ThemedText>
+            Tap the Explore tab to learn more about what's included in this starter app.
+          </ThemedText>
+        </ThemedView>
+        <ThemedView style={styles.stepContainer}>
+          <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
+          <ThemedText>
+            When you're ready, run{' '}
+            <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
+            <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
+            <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
+            <ThemedText type="defaultSemiBold">app-example</ThemedText>.
+          </ThemedText>
+        </ThemedView> */}
+
+        <ThemedView style={styles.spacer}></ThemedView>
+        
+        <TouchableOpacity style={styles.logoutButton} onPress={logout}>
+          <ThemedText style={styles.logoutButtonText}>Logout</ThemedText>
+        </TouchableOpacity>
+      </ParallaxScrollView>
+    </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1
+  },
   titleContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -93,11 +101,14 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 8,
-    marginTop: 20,
+    marginTop: 300,
     alignSelf: 'center',
   },
   logoutButtonText: {
     color: 'white',
     fontWeight: '600',
   },
+  spacer: {
+    flex: 1,
+  }
 });

@@ -13,6 +13,7 @@ import { ThemedView } from '@/components/ThemedView';
 
 import { CameraView, Camera, CameraType } from 'expo-camera';
 import * as MediaLibrary from 'expo-media-library';
+// import { Camera } from 'three';
 
 // type VQAResponse = {
 //   answer: string | undefined;
@@ -30,72 +31,52 @@ export default function CameraScreen() {
   const [photo, setPhoto] = useState<string | null>(null);
   const cameraRef = useRef<any>(null);
 
-  const router = useRouter();
-  const navigation = useNavigation<NativeStackNavigationProp<any>>();
+  // const router = useRouter();
+  // const navigation = useNavigation<NativeStackNavigationProp<any>>();
 
   function toggleCameraFacing() {
-    setFacing(!facing);
+    // setFacing(current );
+    console.log(!facing);
+    setFacing(!facing)
   }
 
-  const takePicture = async () => {
-    if (cameraRef.current) {
-      try {
-        const photo = await cameraRef.current.takePictureAsync();
-        setPhoto(photo.uri);
-        
-        if (mediaPerm) {
-          await MediaLibrary.saveToLibraryAsync(photo.uri);
-        };
+  // useEffect(() => {
 
-        // Fully Reset Navigation History
-        navigation.popToTop();
-        // Direct to Index Page
-        router.replace({
-          pathname: '/records', // Goes back to index
-          params: { photoUri:photo.uri, _ts: Date.now() },
-        });
+  //   (async () => {
+  //     setCamPerm((await Camera.requestCameraPermissionsAsync()).status === "granted");
+  //   })();
 
-      } catch (error) {
-        console.error('Error taking picture:', error);
-      }
-    }
-  };
-
-  useEffect(() => {
-
-    (async () => {
-      setCamPerm((await Camera.requestCameraPermissionsAsync()).status === "granted");
-      setMediaPerm((await MediaLibrary.requestPermissionsAsync()).status === "granted");
-    })();
-
-  }, [])
+  // }, [])
   
-  useEffect(() => {
+  // useEffect(() => {
 
-    if (!camPerm && !camPermAlertShown && camPerm !== undefined){
-      Alert.alert('Enable Camera Permission', 'Please enable camera permissions in settings', [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-        },
-        {text: 'OK'},
-      ]);
-      setCamPermAlertShown(true);
-    }
+  //   if (!camPerm && !camPermAlertShown && camPerm !== undefined){
+  //     Alert.alert('Enable Camera Permission', 'Please enable camera permissions in settings', [
+  //       {
+  //         text: 'Cancel',
+  //         style: 'cancel',
+  //       },
+  //       {text: 'OK'},
+  //     ]);
+  //     setCamPermAlertShown(true);
+  //   }
 
-  }, [camPerm, camPermAlertShown])
+  // }, [camPerm, camPermAlertShown])
 
-  if (camPerm === undefined){
-    return <Text>{"\n\n\n\n\n\n\n\n"}          Requesting Permissions...</Text>;
-  } else if (!camPerm){
-    return <Text>{"\n\n\n\n\n\n\n\n"} No Cam Perm...</Text>;
-  }
+  // if (camPerm === undefined){
+  //   return <Text>{"\n\n\n\n\n\n\n\n"}          Requesting Permissions...</Text>;
+  // } else if (!camPerm){
+  //   return <Text>{"\n\n\n\n\n\n\n\n"} No Cam Perm...</Text>;
+  // }
+
+  console.log("camera permissions checked and all good.")
 
   return (
     <>
-      <Stack.Screen options={{ title: 'Camera' }} />
+      <Stack.Screen options={{ title: 'Cam' }} />
 
       <CameraView style={styles.container} facing='front' ref={cameraRef}>
+
         {/* <TouchableOpacity style={styles.flipButton} onPress={toggleCameraFacing}>
           <ThemedText style={styles.text}>Flip</ThemedText>
         </TouchableOpacity> */}
@@ -103,7 +84,7 @@ export default function CameraScreen() {
         <View style={styles.spacer}/>
 
         <ThemedView style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.captureButton} onPress={takePicture}>
+          <TouchableOpacity style={styles.captureButton}>
             <ThemedView style={styles.captureButtonView}>
               <ThemedView style={styles.captureButtonViewInner}/>
             </ThemedView>
@@ -118,7 +99,9 @@ export default function CameraScreen() {
       {/* {
         facing && (
 
+
           <CameraView style={styles.container} facing='front' ref={cameraRef}>
+
             <TouchableOpacity style={styles.flipButton} onPress={toggleCameraFacing}>
               <ThemedText style={styles.text}>Flip</ThemedText>
             </TouchableOpacity>
@@ -126,7 +109,7 @@ export default function CameraScreen() {
             <View style={styles.spacer}/>
 
             <ThemedView style={styles.buttonContainer}>
-              <TouchableOpacity style={styles.captureButton} onPress={takePicture}>
+              <TouchableOpacity style={styles.captureButton}>
                 <ThemedView style={styles.captureButtonView}>
                   <ThemedView style={styles.captureButtonViewInner}/>
                 </ThemedView>
@@ -137,6 +120,7 @@ export default function CameraScreen() {
 
             <View style={styles.blackBottom}/>
           </CameraView>
+
 
         )
       }
@@ -144,7 +128,9 @@ export default function CameraScreen() {
       {
         !facing && (
 
+
           <CameraView style={styles.container} facing='back' ref={cameraRef}>
+
             <TouchableOpacity style={styles.flipButton} onPress={toggleCameraFacing}>
               <ThemedText style={styles.text}>Flip</ThemedText>
             </TouchableOpacity>
@@ -152,7 +138,7 @@ export default function CameraScreen() {
             <View style={styles.spacer}/>
 
             <ThemedView style={styles.buttonContainer}>
-              <TouchableOpacity style={styles.captureButton} onPress={takePicture}>
+              <TouchableOpacity style={styles.captureButton}>
                 <ThemedView style={styles.captureButtonView}>
                   <ThemedView style={styles.captureButtonViewInner}/>
                 </ThemedView>
@@ -164,9 +150,9 @@ export default function CameraScreen() {
             <View style={styles.blackBottom}/>
           </CameraView>
 
+
         )
       } */}
-
       
     </>
   )

@@ -15,11 +15,13 @@
     "preset": "jest-expo"
   },
   "dependencies": {
+    "@expo-google-fonts/poppins": "^0.3.0",
     "@expo/vector-icons": "^14.0.2",
     "@huggingface/inference": "^3.7.1",
     "@react-native-async-storage/async-storage": "^1.21.0",
     "@react-navigation/bottom-tabs": "^7.2.0",
     "@react-navigation/native": "^7.0.14",
+    "buffer": "^6.0.3",
     "dotenv": "^16.5.0",
     "expo": "~52.0.43",
     "expo-blur": "~14.0.3",

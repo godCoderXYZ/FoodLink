@@ -33,18 +33,18 @@ export default function TabLayout() {
           tabBarIcon: ({ color }: { color:string }) => <IconSymbol size={28} name="house.fill" color={color} />,
         }}
       />
-      <Tabs.Screen
+      {/* <Tabs.Screen
         name="explore"
         options={{
           title: 'Explore',
           tabBarIcon: ({ color }: { color:string }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
         }}
-      />
+      /> */}
       <Tabs.Screen
         name="records"
         options={{
           title: 'Records',
-          tabBarIcon: ({ color }: { color:string }) => <IconSymbol size={28} name="a.book.closed.fill" color={color} />
+          tabBarIcon: ({ color }: { color:string }) => <IconSymbol size={28} name="photo.fill" color={color} />
         }}
       />
     </Tabs>
